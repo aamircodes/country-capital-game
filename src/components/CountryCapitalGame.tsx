@@ -26,6 +26,10 @@ export function getButtonClass(option: Option) {
   }
 }
 
+function isPartOfPair(opt: Option, selected: Option, option: Option) {
+  return opt.value === selected.value || opt.value === option.value;
+}
+
 export function CountryCapitalGame({ data }: { data: Record<string, string> }) {
   const [options, setOptions] = useState<Option[]>(
     [...getCountries(data), ...getCapitals(data)]
@@ -49,24 +53,18 @@ export function CountryCapitalGame({ data }: { data: Record<string, string> }) {
         )
       );
     } else {
-      if (
-        selected.value === data[option.value] ||
-        data[selected.value] === option.value
-      ) {
+      const capital = data[option.value];
+      const selectedCapital = data[selected.value];
+      if (selected.value === capital || selectedCapital === option.value) {
         setOptions(
-          options.filter((opt) => {
-            return !(
-              opt.value === selected.value || opt.value === option.value
-            );
-          })
+          options.filter((opt) => !isPartOfPair(opt, option, selected))
         );
       } else {
         setOptions(
-          options.map((opt) => {
-            return opt.value === selected.value || opt.value === option.value
-              ? { ...opt, state: 'WRONG' }
-              : opt;
-          })
+          options.map((opt) => ({
+            ...opt,
+            state: isPartOfPair(opt, option, selected) ? 'WRONG' : opt.state,
+          }))
         );
       }
       setSelected(undefined);
