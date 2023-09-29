@@ -1,16 +1,4 @@
-function CountryCapitalGame({ data }: { data: Record<string, string> }) {
-  const countries = Object.keys(data);
-  const capital = Object.values(data);
-  const options = countries.concat(capital);
-
-  return (
-    <>
-      {options.map((option) => (
-        <button>{option}</button>
-      ))}
-    </>
-  );
-}
+import { CountryCapitalGame } from './components/CountryCapitalGame';
 
 function App() {
   return (
